@@ -1,0 +1,59 @@
+.customer-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.customer-details{
+    margin-left: 30px;
+}
+input{
+    padding: 10px;
+    margin: 2px;
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid blue;
+}
+input:focus{
+    box-shadow: 0px 0px 10px 5px blue;
+}
+textarea{
+    padding: 10px;
+    margin: 2px;
+    width: 200px;
+    height: 50px;
+    border-radius: 20px;
+    outline: none;
+    border: 1px solid blue;
+}
+textarea:focus{
+    box-shadow: 0px 0px 10px 5px blue;
+}
+.customer-name{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+button{
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    height: fit-content;
+}
+
+.entry-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 20px;
+}
+.entry{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

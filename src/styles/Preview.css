@@ -1,0 +1,70 @@
+
+.preview-container{
+    padding: 100px 300px;
+    margin-top: 200px;
+    display: flex;
+    font-size: large;
+    height: 120vh;
+    flex-direction: column;
+    justify-content: center;
+}
+.preview-container .spacer{
+    height: 30vh;
+}
+.customer-details{
+    box-sizing: border-box;
+    text-wrap: wrap;
+}
+.preview-content{
+    padding: 50px;
+}
+.Items-table td,th{
+    table-layout: auto;
+    border: 1px solid;
+    border-collapse: collapse;
+    text-align: center;
+}
+.Items-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.purchase-details{
+    padding: 30px;
+    text-align: right;
+}
+
+.header div{
+    flex: 1;
+    padding-left: 10px;
+}
+.header{
+    display: flex;
+    justify-content: center;
+}
+
+tr .empty-cell{
+    border: none;
+}
+
+tr .delete-button-cell{
+    visibility: hidden;
+    scale: 0;
+    right: 300px;
+    position: absolute;
+    border: none;
+    justify-content: left;
+    align-items: center;
+    transition: 200ms ease;
+}
+tr .delete-button-cell button{
+    background-color: red;
+    padding: 5px;
+    margin-left: 10px;
+}
+tr:hover .delete-button-cell{
+    visibility: visible;
+    scale: 1;
+    position: absolute;
+    right: 280px;
+}
