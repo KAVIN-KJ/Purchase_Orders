@@ -12,8 +12,9 @@ const Inputs = (props) => {
     const [qty, setqty] = useState(0);
     const [uom, setUom] = useState("Nos");
     const [rate, setRate] = useState(0);
-    const[cgst,setCgst] = useState(9);
-    const [sgst,setSgst] = useState(9);
+    const [cgst, setCgst] = useState(9);
+    const [sgst, setSgst] = useState(9);
+    const [disc,setDisc] = useState(0);
     const handleSubmit = () => {
         if (desc == null || desc == "") {
             alert("Empty Entry not allowed")
@@ -24,9 +25,10 @@ const Inputs = (props) => {
                 qty: qty,
                 uom: uom,
                 rate: rate,
-                net: qty * rate,
-                CGST:cgst,
-                SGST:sgst
+                net:  (qty * rate) - (qty*rate*disc/100),
+                CGST: cgst,
+                SGST: sgst,
+                disc: disc
             }
             props.setEntries([...props.entries, obj])
             console.log(props.entries)
@@ -36,11 +38,16 @@ const Inputs = (props) => {
 
     return (
 
-        <div>
+        <div className='inputs-container'>
+            <h2>Customer Details</h2>
             <div className='customer-container'>
                 <div className='customer-name'>
                     <label>Customer Name</label>
                     <textarea onChange={(e) => { props.setCustomer(e.target.value) }} className='customer-name' type='text' placeholder='To' name='customer' />
+                </div>
+                <div className='customer-name'>
+                    <label>Place</label>
+                    <textarea onChange={(e) => { props.setPlace(e.target.value) }} className='customer-name' type='text' placeholder='To' name='customer' />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <label>Purchase Order No : </label>
@@ -49,6 +56,14 @@ const Inputs = (props) => {
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <label onChange={(e) => { localStorage.setItem("date", e.target.value) }}>Date :</label>
                     <input type="text" defaultValue={day + " : " + month + " : " + year} onChange={(e) => { localStorage.setItem("date", e.target.value) }} />
+                </div>
+                <div className='entry'>
+                    <label>Net Discount %</label>
+                    <input defaultValue={0} onChange={(e) => { props.setDiscount(e.target.value) }} type='number' placeholder='Net Discount' />
+                </div>
+                <div className='entry'>
+                    <label>Packing and Forwarding</label>
+                    <input defaultValue={0} onChange={(e) => { props.setPf(e.target.value) }} type='number' placeholder='Discount' />
                 </div>
             </div>
             <div className='entry-container'>
@@ -70,11 +85,15 @@ const Inputs = (props) => {
                 </div>
                 <div className='entry'>
                     <label>CGST</label>
-                    <input defaultValue={9} onChange={(e) => { props.setTaxes((prevTaxes) => ({...prevTaxes,CGST: e.target.value}))}} type='number' placeholder='CGST' />
-                </div>  
+                    <input defaultValue={9} onChange={(e) => { props.setTaxes((prevTaxes) => ({ ...prevTaxes, CGST: e.target.value })) }} type='number' placeholder='CGST' />
+                </div>
                 <div className='entry'>
                     <label>SGST</label>
-                    <input defaultValue={9} onChange={(e) => { props.setTaxes((prevTaxes) => ({...prevTaxes,SGST: e.target.value}))} } type='number' placeholder='SGST' />
+                    <input defaultValue={9} onChange={(e) => { props.setTaxes((prevTaxes) => ({ ...prevTaxes, SGST: e.target.value })) }} type='number' placeholder='SGST' />
+                </div>
+                <div className="entry">
+                <label>Discount</label>
+                <input onChange={(e) => { setDisc(e.target.value) }} type='number' placeholder='Discount' />
                 </div>
                 <button onClick={handleSubmit}>Submit</button>
             </div>

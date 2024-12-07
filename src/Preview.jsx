@@ -7,17 +7,29 @@ const Preview = (props) => {
     const printRef = useRef();
 
     const [total, setTotal] = useState(0);
-
+    const [discountedTotal, setDiscountedTotal] = useState(0);
+    const [packing, setPacking] = useState(0);
+    const [cgst, setCgst] = useState(0);
+    const [sgst, setSgst] = useState(0);
+    const [net, setNet] = useState(0);
     useEffect(() => {
         let calculatedTotal = 0;
 
         props.entries.forEach(item => {
             calculatedTotal += item.net;
         });
-
         setTotal(calculatedTotal);
-    }, [props.entries]);
+        let discount = Math.round(calculatedTotal * props.discount / 100)
+        let temp_packing = Math.round((calculatedTotal - discount) * props.pf / 100);
+        setPacking(temp_packing)
+        setDiscountedTotal(discount);
+        let temp_cgst = Math.round((calculatedTotal - discount + temp_packing) * props.taxes.CGST / 100)
+        setCgst(temp_cgst);
+        let temp_sgst = Math.round((calculatedTotal - discount + temp_packing) * props.taxes.SGST / 100)
+        setSgst(temp_sgst)
+        setNet(calculatedTotal + temp_cgst + temp_sgst + temp_packing - discount);
 
+    }, [props.entries, props.discount]);
     const deleteEntry = (index) => {
         props.setEntries((prevEntries) => prevEntries.filter((_, i) => i !== index));
         console.log(props.entries)
@@ -37,13 +49,15 @@ const Preview = (props) => {
 
 
     return (
-        <div style={{ borderTop: "1px solid black" }}>
+        <div >
             <div ref={printRef} className='preview-container'>
-                <div className='spacer'></div>
+                
+                {/* <div className='spacer'></div> */}
                 <div className='header'>
                     <div className='customer-details'>
                         <p>To,</p>
                         <p><b>{props.customer}</b></p>
+                        <p>{props.place}</p>
                     </div>
                     <div className='purchase-details'>
                         <p>Purchase Order No : <b>{localStorage.getItem("Purchase-order")}</b></p>
@@ -68,7 +82,14 @@ const Preview = (props) => {
                             <th>Qty</th>
                             <th>UOM</th>
                             <th>Rate</th>
-                            <th>Net</th>
+                            {props.entries.some((item) => item.disc != 0) &&
+                                <>
+                                    <th>Discount %</th>
+                                    <th>Discount Rate</th>
+                                </>
+
+                            }
+                            <th>Net Rate</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,16 +97,21 @@ const Preview = (props) => {
                             props.entries.map((item, key) => {
                                 return (
                                     <>
-                                        <tr className='table-entry'>
+                                        <tr key={key} className='table-entry'>
                                             <td>{key + 1}</td>
                                             <td>{item.desc}</td>
                                             <td>{item.qty}</td>
                                             <td>{item.uom}</td>
                                             <td>{item.rate}</td>
+                                            {props.entries.some((i) => i.disc != 0) &&
+                                                <>
+                                                    <td>{item.disc}%</td>
+                                                    <td>{((item.qty * item.rate)*item.disc/100 )}</td>
+                                                </>
+                                            }
                                             <td>{item.net}</td>
-                                            <td className='delete-button-cell'><button onClick={() => deleteEntry(key)} className='delete-button'><img style={{ width: "15px" }} src={deleteicon} alt="" /></button></td>
+                                            <td className='delete-button-cell'><button onClick={() => deleteEntry(key)} className='delete-button'><img className='delete-icon' src={deleteicon} alt="" /></button></td>
                                         </tr>
-
                                     </>
                                 )
                             }
@@ -94,36 +120,153 @@ const Preview = (props) => {
                         <tr>
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
+                            {
+                                props.entries.some((item) => item.disc != 0) &&
+                                (
+                                    <>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                    </>
+                                )
+                            }
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td>Total</td>
                             <td>{total}</td>
-
                         </tr>
+                        {
+                            props.pf != 0 ? (
+                                <>
+                                    <tr>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        {
+                                            props.entries.some((item) => item.disc != 0) &&
+                                            (
+                                                <>
+                                                    <td className='empty-cell'></td>
+                                                    <td className='empty-cell'></td>
+                                                </>
+                                            )
+                                        }
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        <td >P&F {props.pf}%</td>
+                                        <td>{packing}</td>
+                                        {console.log(packing)}
+                                    </tr>
+                                    <tr>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        {
+                                            props.entries.some((item) => item.disc != 0) &&
+                                            (
+                                                <>
+                                                    <td className='empty-cell'></td>
+                                                    <td className='empty-cell'></td>
+                                                </>
+                                            )
+                                        }
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        <td > <b>Total after P&F</b></td>
+                                        <td>{total - discountedTotal + packing}</td>
+                                    </tr>
+                                </>
+                            ) : (<></>)
+                        }
+                        {
+                            props.discount != 0 ? (
+                                <>
+                                    <tr>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        {
+                                            props.entries.some((item) => item.disc != 0) &&
+                                            (
+                                                <>
+                                                    <td className='empty-cell'></td>
+                                                    <td className='empty-cell'></td>
+                                                </>
+                                            )
+                                        }
+                                        <td className='empty-cell'></td>
+                                        <td >Discount {props.discount}%</td>
+                                        <td>{discountedTotal}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                        {
+                                            props.entries.some((item) => item.disc != 0) &&
+                                            (
+                                                <>
+                                                    <td className='empty-cell'></td>
+                                                    <td className='empty-cell'></td>
+                                                </>
+                                            )
+                                        }
+                                        <td className='empty-cell'></td>
+                                        <td > <b>Total after Discount</b></td>
+                                        <td>{total - discountedTotal}</td>
+                                    </tr>
+                                </>
+                            ) : (<></>)
+                        }
                         <tr>
                             <td className='empty-cell'></td>
+                            {
+                                props.entries.some((item) => item.disc != 0) &&
+                                (
+                                    <>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                    </>
+                                )
+                            }
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td>CGST {props.taxes.CGST}%</td>
-                            <td>{Math.round((total * (props.taxes.CGST / 100)).toFixed(2))}</td>
+                            <td>{cgst}</td>
 
                         </tr>
                         <tr>
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
+                            {
+                                props.entries.some((item) => item.disc != 0) &&
+                                (
+                                    <>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                    </>
+                                )
+                            }
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td>SGST {props.taxes.SGST}%</td>
-                            <td>{Math.round((total * (props.taxes.SGST / 100)).toFixed(2))}</td>
+                            <td>{sgst}</td>
                         </tr>
                         <tr>
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
+                            {
+                                props.entries.some((item) => item.disc != 0) &&
+                                (
+                                    <>
+                                        <td className='empty-cell'></td>
+                                        <td className='empty-cell'></td>
+                                    </>
+                                )
+                            }
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
-                            <td style={{ border: "2px solid" }}>Net value</td>
-                            <td style={{ border: "2px solid" }}>{Math.round(total + total * (props.taxes.SGST / 100) + total * (props.taxes.CGST / 100))}</td>
+                            <td style={{ border: "2px solid" }}> <b>Net value</b></td>
+                            <td style={{ border: "2px solid" }}> <b>{net}</b></td>
+
                         </tr>
                     </tbody>
                 </table>

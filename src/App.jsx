@@ -7,14 +7,18 @@ import Inputs from './Inputs'
 import Preview from './Preview'
 
 function App() {
-  const [customer,setCustomer] = useState("");  
+  const [customer,setCustomer] = useState("---");  
   const [entries, setEntries] = useState([])
+  const [place,setPlace] = useState("COIMBATORE");
   const[taxes,setTaxes] = useState({CGST:9,SGST:9})
+  const [discount, setDiscount] = useState(0);
+  const [pf,setPf] = useState(0);
   return (
     <>
-      <Inputs setTaxes = {setTaxes} setCustomer = {setCustomer}  entries = {entries} setEntries={setEntries} />
-      <h1>Preview</h1>
-      <Preview setEntries = {setEntries} taxes = {taxes} customer = {customer} entries = {entries} />
+    <div className='app-container'>
+      <Inputs setPf = {setPf} setDiscount={setDiscount} setPlace = {setPlace} setTaxes = {setTaxes} setCustomer = {setCustomer}  entries = {entries} setEntries={setEntries} />
+      <Preview pf = {pf} place = {place} discount = {discount} setEntries = {setEntries} taxes = {taxes} customer = {customer} entries = {entries} />
+    </div>
     </>
   )
 }
