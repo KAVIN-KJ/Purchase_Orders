@@ -63,7 +63,11 @@ const Inputs = (props) => {
                 </div>
                 <div className='entry'>
                     <label>Packing and Forwarding</label>
-                    <input defaultValue={0} onChange={(e) => { props.setPf(e.target.value) }} type='number' placeholder='Discount' />
+                    <input defaultValue={0} onChange={(e) => { props.setPf(e.target.value) }} type='number' placeholder='Packing & Forwarding' />
+                </div>
+                <div className='entry'>
+                    <label>Transport</label>
+                    <input onChange={(e) => { props.setTransport(e.target.value) }} type='text' placeholder='Transport' />
                 </div>
             </div>
             <div className='entry-container'>
@@ -77,7 +81,7 @@ const Inputs = (props) => {
                 </div>
                 <div className='entry'>
                     <label>Unit of Measurement</label>
-                    <input onChange={(e) => { setUom(e.target.value) }} type='text' placeholder='UOM' />
+                    <input defaultValue={"Nos"} onChange={(e) => { setUom(e.target.value) }} type='text' placeholder='UOM' />
                 </div>
                 <div className='entry'>
                     <label>Rate</label>

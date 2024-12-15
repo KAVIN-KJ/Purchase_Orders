@@ -13,11 +13,12 @@ function App() {
   const[taxes,setTaxes] = useState({CGST:9,SGST:9})
   const [discount, setDiscount] = useState(0);
   const [pf,setPf] = useState(0);
+  const [transport,setTransport] = useState("");
   return (
     <>
     <div className='app-container'>
-      <Inputs setPf = {setPf} setDiscount={setDiscount} setPlace = {setPlace} setTaxes = {setTaxes} setCustomer = {setCustomer}  entries = {entries} setEntries={setEntries} />
-      <Preview pf = {pf} place = {place} discount = {discount} setEntries = {setEntries} taxes = {taxes} customer = {customer} entries = {entries} />
+      <Inputs setTransport = {setTransport} setPf = {setPf} setDiscount={setDiscount} setPlace = {setPlace} setTaxes = {setTaxes} setCustomer = {setCustomer}  entries = {entries} setEntries={setEntries} />
+      <Preview transport = {transport} pf = {pf} place = {place} discount = {discount} setEntries = {setEntries} taxes = {taxes} customer = {customer} entries = {entries} />
     </div>
     </>
   )

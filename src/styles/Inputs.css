@@ -52,7 +52,9 @@ button{
 .entry-container{
     display: flex;
     justify-content: space-evenly;
+    flex-direction: column;
     flex-wrap: wrap;
+    height: fit-content;
     align-items: center;
     margin: 20px 0px;
     border-bottom: 2px solid black;

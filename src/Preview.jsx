@@ -44,15 +44,15 @@ const Preview = (props) => {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
         pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("Purchase-Order.pdf");
+        pdf.save();
     };
 
 
     return (
         <div >
             <div ref={printRef} className='preview-container'>
-                
-                {/* <div className='spacer'></div> */}
+
+                <div className='spacer'></div>
                 <div className='header'>
                     <div className='customer-details'>
                         <p>To,</p>
@@ -77,19 +77,19 @@ const Preview = (props) => {
                     <thead>
 
                         <tr>
-                            <th>S.no</th>
+                            <th style={{width:"70px"}}>S.no</th>
                             <th>Description</th>
-                            <th>Qty</th>
-                            <th>UOM</th>
-                            <th>Rate</th>
+                            <th style={{width:"70px"}}>Qty</th>
+                            <th style={{width:"70px"}}>UOM</th>
+                            <th style={{width:"110px"}}>Rate</th>       
                             {props.entries.some((item) => item.disc != 0) &&
                                 <>
-                                    <th>Discount %</th>
-                                    <th>Discount Rate</th>
+                                    <th style={{width:"150px"}}>Discount %</th>
+                                    <th style={{width:"120px"}}>Discount Amount</th>
                                 </>
 
                             }
-                            <th>Net Rate</th>
+                            <th style={{width:"110px"}}>Net Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,10 +106,10 @@ const Preview = (props) => {
                                             {props.entries.some((i) => i.disc != 0) &&
                                                 <>
                                                     <td>{item.disc}%</td>
-                                                    <td>{((item.qty * item.rate)*item.disc/100 )}</td>
+                                                    <td>{Math.round((item.qty * item.rate) * item.disc / 100)}</td>
                                                 </>
                                             }
-                                            <td>{item.net}</td>
+                                            <td>{Math.round(item.net)}</td>
                                             <td className='delete-button-cell'><button onClick={() => deleteEntry(key)} className='delete-button'><img className='delete-icon' src={deleteicon} alt="" /></button></td>
                                         </tr>
                                     </>
@@ -132,7 +132,7 @@ const Preview = (props) => {
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td>Total</td>
-                            <td>{total}</td>
+                            <td>{Math.round(total)}</td>
                         </tr>
                         {
                             props.pf != 0 ? (
@@ -169,7 +169,7 @@ const Preview = (props) => {
                                         }
                                         <td className='empty-cell'></td>
                                         <td className='empty-cell'></td>
-                                        <td > <b>Total after P&F</b></td>
+                                        <td > <b>S.Total</b></td>
                                         <td>{total - discountedTotal + packing}</td>
                                     </tr>
                                 </>
@@ -209,7 +209,7 @@ const Preview = (props) => {
                                             )
                                         }
                                         <td className='empty-cell'></td>
-                                        <td > <b>Total after Discount</b></td>
+                                        <td > <b>S.Total</b></td>
                                         <td>{total - discountedTotal}</td>
                                     </tr>
                                 </>
@@ -265,11 +265,28 @@ const Preview = (props) => {
                             <td className='empty-cell'></td>
                             <td className='empty-cell'></td>
                             <td style={{ border: "2px solid" }}> <b>Net value</b></td>
-                            <td style={{ border: "2px solid" }}> <b>{net}</b></td>
+                            <td style={{ border: "2px solid" }}> <b>{Math.round(net)}</b></td>
 
                         </tr>
                     </tbody>
                 </table>
+                <div className='signature-container'>
+                    <div className='signature-spacer'>
+                        <p>
+                            <b>
+                                Transport : {props.transport}
+                            </b>
+                        </p>
+                    </div>
+                    <div className='signature'>
+                        <b>
+                            <p>For Selvaganapathy cotton mills (P) Ltd,. </p>
+                            <br />
+                            <br />
+                            <p>Authorised Signatory</p>
+                        </b>
+                    </div>
+                </div>
             </div>
             <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
                 <button onClick={handlePrint}>Print</button>
